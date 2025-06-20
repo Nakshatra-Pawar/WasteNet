@@ -30,19 +30,31 @@ WasteNet applies aggressive data augmentation, early stopping, L2 regularisation
 ## 4&nbsp;| Repository Structure
 ```text
 .
-├── data/                 # original images (ignored or stored with Git LFS)
+├── data/                       ← full image dataset (Git LFS-tracked)
+│   ├── train/
+│   │   ├── 1-Cardboard/
+│   │   ├── 2-Food Organics/
+│   │   ├── 3-Glass/
+│   │   ├── 4-Metal/
+│   │   ├── 5-Miscellaneous Trash/
+│   │   ├── 6-Paper/
+│   │   ├── 7-Plastic/
+│   │   ├── 8-Textile Trash/
+│   │   └── 9-Vegetation/
+│   └── test/
+│       ├── 1-Cardboard/
+│       ├── 2-Food Organics/
+│       ├── 3-Glass/
+│       ├── 4-Metal/
+│       ├── 5-Miscellaneous Trash/
+│       ├── 6-Paper/
+│       ├── 7-Plastic/
+│       ├── 8-Textile Trash/
+│       └── 9-Vegetation/
 ├── notebooks/
-│   └── WasteNet.ipynb    # end‑to‑end EDA, training & evaluation
-├── src/
-│   ├── dataloaders.py
-│   ├── models.py
-│   ├── train.py
-│   └── evaluate.py
-├── outputs/
-│   ├── checkpoints/
-│   └── plots/
-├── requirements.txt
-└── README.md   <-- you are here
+│   └── WasteNet.ipynb          ← end-to-end EDA ▸ training ▸ evaluation
+├── .gitattributes              ← tells Git LFS to store *.jpg / *.png remotely
+└── README.md                   ← you are here
 ```
 
 ## 5&nbsp;| Setup
