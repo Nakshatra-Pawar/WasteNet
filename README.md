@@ -1,16 +1,12 @@
 # WasteNet — Transfer‑Learning‑based Classification of Nine Waste Categories
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Keras](https://img.shields.io/badge/Keras-Transfer_Learning-red)
-![License](https://img.shields.io/badge/License-MIT-green)
-
 Municipal solid‑waste sorting is tedious and error‑prone. **WasteNet** tackles this problem by training a compact image‑classifier on a *small, nine‑class waste dataset* using **transfer learning**.  
 Instead of training from scratch, the project fine‑tunes only the last dense layer of four large ImageNet‑pre‑trained CNN backbones while freezing earlier layers.
 
 ---
 
 ## 1&nbsp;| Project Overview
-WasteNet follows the workflow specified in the DSCI 552 final project brief, applying aggressive data augmentation, early stopping, L2 regularisation, batch normalisation and dropout. It reports Precision, Recall, AUC and F1 scores on train/validation/test splits.
+WasteNet applies aggressive data augmentation, early stopping, L2 regularisation, batch normalisation and dropout to improve generalisation and combat overfitting. It reports Precision, Recall, AUC and F1 on train/validation/test splits.
 
 ## 2&nbsp;| Dataset
 * Folder‑structured image set with one directory per class  
@@ -69,31 +65,39 @@ python src/evaluate.py --weights outputs/checkpoints/resnet50_best.h5
 Trained weights and TensorBoard logs are saved under `outputs/`.
 
 ## 7&nbsp;| Results
-| Model           | Val F1 | Test F1 | Test AUC |
-|-----------------|:------:|:-------:|:--------:|
-| VGG‑16          | 0.88   | 0.86    | 0.97     |
-| ResNet‑50       | **0.91** | **0.89** | **0.98** |
-| ResNet‑101      | 0.90   | 0.88    | 0.98     |
-| EfficientNet‑B0 | 0.89   | 0.87    | 0.97     |
+| Model                       | Accuracy | Macro F1 | Macro AUC |
+|-----------------------------|:--------:|:--------:|:---------:|
+| Baseline (CNN from scratch) | **0.24** | **0.10** | **0.62** |
+| VGG-16 (+ transfer learning)| **0.64** | **0.61** | **0.92** |
 
-ResNet‑50 edged out the other backbones across every metric, so its weights are provided as the default model.
+### Per-class F1 scores
 
-## 8&nbsp;| Inference Demo
-```python
-from src.predict import classify
-print(classify("demo_images/plastic_bottle.jpg"))
-# ➜ plastic : 0.97, metal: 0.02, paper: 0.01 ...
-```
+| Class | Baseline F1 | VGG-16 F1 |
+|-------|:-----------:|:---------:|
+| Cardboard            | 0.00 → **0.70** |
+| Food Organics        | 0.00 → **0.70** |
+| Glass                | 0.00 → **0.48** |
+| Metal                | 0.01 → **0.69** |
+| Misc. Trash          | 0.00 → **0.39** |
+| Paper                | 0.00 → **0.76** |
+| Plastic              | 0.36 → **0.65** |
+| Textile Trash        | 0.00 → **0.34** |
+| Vegetation           | 0.54 → **0.81** |
 
-## 9&nbsp;| Known Limitations & Next Steps
+> **Key take-aways**
+> * Transfer learning with VGG-16 lifts overall **accuracy from 24 % to 64 %** and macro-F1 from 0.10 to 0.61 (6× improvement).  
+> * The biggest gains appear in classes that were virtually unlearnable by the scratch model (Cardboard, Food Organics, Paper).  
+> * Remaining weak spots are **Miscellaneous Trash** and **Textile Trash**, likely due to intra-class visual diversity.  
+> * A macro-AUC of **0.92** indicates strong separability across all nine categories.
+
+
+
+## 8&nbsp;| Known Limitations & Next Steps
 * Confusions between similar‑looking plastic vs glass items  
 * Explore vision transformers & self‑supervised pre‑training  
 * Deploy as a mobile TensorFlow‑Lite app for on‑device sorting
 
-## 10&nbsp;| License
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
-
-## 11&nbsp;| Citation
+## 9&nbsp;| Citation
 If you use this work in research, please cite the original DSCI 552 assignment prompt.
 
 ---
